@@ -4,6 +4,7 @@ import AutocompleteControl from "./AutocompleteControl.tsx";
 import AutocompleteResult from "./AutocompleteResult.tsx";
 import { useDispatch } from 'react-redux';
 import { addSelectedPlace } from './autocompleteSlice';
+import { ControlPanel } from "./control-panel.tsx";
 import './App.css'
 
 // @ts-ignore
@@ -13,24 +14,9 @@ const API_KEY: string = (globalThis.GOOGLE_MAPS_API_KEY ??
 export type AutocompleteMode = { id: string; label: string };
 
 const App = () => {
-
   const dispatch = useDispatch();
   const [selectedPlace, setSelectedPlace] =
       useState<google.maps.places.Place | null>(null);
-
-  const incompatibleVersionLoaded = Boolean(
-      globalThis &&
-      globalThis.google?.maps?.version &&
-      !(
-          globalThis.google?.maps?.version.endsWith('-alpha') ||
-          globalThis.google?.maps?.version.endsWith('-beta')
-      )
-  );
-
-  if (incompatibleVersionLoaded) {
-    location.reload();
-    return;
-  }
 
   const handlePlaceSelect = (place: google.maps.places.Place | null) => {
     setSelectedPlace(place);
@@ -57,6 +43,8 @@ const App = () => {
             <AutocompleteResult place={selectedPlace}/>
           </Map>
         </APIProvider>
+
+        <ControlPanel />
       </>
   )
 }

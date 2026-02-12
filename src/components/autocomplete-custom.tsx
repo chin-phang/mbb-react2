@@ -1,4 +1,4 @@
-import { type FormEvent, type MouseEvent, useCallback, useState } from "react";
+import { type FormEvent, useCallback, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useAutocompleteSuggestions } from '../hooks/use-autocomplete-suggestions';
 
@@ -18,10 +18,7 @@ export const AutocompleteCustom = ({onPlaceSelect}: Props) => {
 
   const handleSuggestionClick = useCallback(
       // eslint-disable-next-line react-hooks/preserve-manual-memoization
-      async (suggestion: google.maps.places.AutocompleteSuggestion, event: MouseEvent<HTMLLIElement>) => {
-        event.stopPropagation();
-        event.preventDefault();
-
+      async (suggestion: google.maps.places.AutocompleteSuggestion) => {
         if (!places) return;
         if (!suggestion.placePrediction) return;
 
@@ -29,6 +26,7 @@ export const AutocompleteCustom = ({onPlaceSelect}: Props) => {
 
         await place.fetchFields({
           fields: [
+            'displayName',
             'viewport',
             'location',
             'svgIconMaskURI',
@@ -62,7 +60,7 @@ export const AutocompleteCustom = ({onPlaceSelect}: Props) => {
                     <li
                         key={index}
                         className="custom-list-item"
-                        onClick={(event) => handleSuggestionClick(suggestion, event)}>
+                        onClick={() => handleSuggestionClick(suggestion)}>
                       {suggestion.placePrediction?.text.text}
                     </li>
                 );
